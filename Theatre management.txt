@@ -1,0 +1,383 @@
+mysql> drop DATABASE IF EXISTS TheatreManagement;
+Query OK, 4 rows affected (0.12 sec)
+
+mysql> 
+mysql> CREATE DATABASE IF NOT EXISTS TheatreManagement;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE TheatreManagement;
+Database changed
+mysql> 
+mysql> CREATE TABLE Customers (
+    ->     customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     customer_name VARCHAR(100) NOT NULL,
+    ->     phone VARCHAR(15) UNIQUE,
+    ->     email VARCHAR(100) UNIQUE
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> 
+mysql> 
+mysql> CREATE TABLE Shows (
+    ->     show_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     show_date DATE NOT NULL,
+    ->     show_time TIME NOT NULL,
+    ->     price DECIMAL(8,2) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> 
+mysql> 
+mysql> CREATE TABLE Seats (
+    ->     seat_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     seat_number VARCHAR(10) NOT NULL,
+    ->     row_name VARCHAR(10),
+    ->     seat_type VARCHAR(20)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> 
+mysql> CREATE TABLE Bookings (
+    ->     booking_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     booking_date DATE NOT NULL,
+    ->     total_amount DECIMAL(10,2),
+    ->     status VARCHAR(20),
+    -> 
+    ->     customer_id INT,
+    ->     show_id INT,
+    ->     seat_id INT,
+    -> 
+    ->     FOREIGN KEY (customer_id)
+    ->         REFERENCES Customers(customer_id),
+    -> 
+    ->     FOREIGN KEY (show_id)
+    ->         REFERENCES Shows(show_id),
+    -> 
+    ->     FOREIGN KEY (seat_id)
+    ->         REFERENCES Seats(seat_id)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> 
+mysql> 
+mysql> INSERT INTO Customers (customer_name, phone, email) VALUES
+    -> ('Ganesh Ye Lenin', '7993308368', 'mrleninganesh@gmail.com'),
+    -> ('Anish Shankar', '9032057166', 'anishshankar@gmail.com'),
+    -> ('Koushik Varma', '7981256985', 'koushikvarma@gmail.com'),
+    -> ('Vinodh Kumar', '7995669332', 'vinodhkumar@gmail.com'),
+    -> ('Bhanu prakash', '7993103931', 'bhanuprakash@gmail.com'),
+    -> ('Yashwanth Mirapala', '8639690699', 'yashwanthmirapala@gmail.com');
+Query OK, 6 rows affected (0.00 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> INSERT INTO Shows (show_date, show_time, price) VALUES
+    -> ('2026-06-25', '18:00:00', 250.00),
+    -> ('2026-06-25', '21:00:00', 300.00),
+    -> ('2026-06-26', '19:30:00', 350.00),
+    -> ('2026-06-27', '17:00:00', 200.00),
+    -> ('2026-06-27', '20:00:00', 400.00),
+    -> ('2026-06-28', '18:30:00', 275.00);
+Query OK, 6 rows affected (0.00 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> INSERT INTO Seats (seat_number, row_name, seat_type) VALUES
+    -> ('A1', 'A', 'Regular'),
+    -> ('A2', 'A', 'Regular'),
+    -> ('B1', 'B', 'Premium'),
+    -> ('B2', 'B', 'Premium'),
+    -> ('C1', 'C', 'VIP'),
+    -> ('C2', 'C', 'VIP');
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> 
+mysql> 
+mysql> INSERT INTO Bookings
+    -> (booking_date, total_amount, status, customer_id, show_id, seat_id)
+    -> VALUES
+    -> ('2026-06-21', 250.00, 'Confirmed', 1, 1, 1),
+    -> ('2026-06-21', 300.00, 'Confirmed', 2, 2, 3),
+    -> ('2026-06-22', 350.00, 'Pending',   3, 3, 4),
+    -> ('2026-06-22', 200.00, 'Confirmed', 4, 4, 2),
+    -> ('2026-06-23', 400.00, 'Cancelled', 5, 5, 5),
+    -> ('2026-06-23', 275.00, 'Confirmed', 6, 6, 6);
+Query OK, 6 rows affected (0.04 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Customers;
++-------------+--------------------+------------+-----------------------------+
+| customer_id | customer_name      | phone      | email                       |
++-------------+--------------------+------------+-----------------------------+
+|           1 | Ganesh Ye Lenin    | 7993308368 | mrleninganesh@gmail.com     |
+|           2 | Anish Shankar      | 9032057166 | anishshankar@gmail.com      |
+|           3 | Koushik Varma      | 7981256985 | koushikvarma@gmail.com      |
+|           4 | Vinodh Kumar       | 7995669332 | vinodhkumar@gmail.com       |
+|           5 | Bhanu prakash      | 7993103931 | bhanuprakash@gmail.com      |
+|           6 | Yashwanth Mirapala | 8639690699 | yashwanthmirapala@gmail.com |
++-------------+--------------------+------------+-----------------------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Shows;
++---------+------------+-----------+--------+
+| show_id | show_date  | show_time | price  |
++---------+------------+-----------+--------+
+|       1 | 2026-06-25 | 18:00:00  | 250.00 |
+|       2 | 2026-06-25 | 21:00:00  | 300.00 |
+|       3 | 2026-06-26 | 19:30:00  | 350.00 |
+|       4 | 2026-06-27 | 17:00:00  | 200.00 |
+|       5 | 2026-06-27 | 20:00:00  | 400.00 |
+|       6 | 2026-06-28 | 18:30:00  | 275.00 |
++---------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Seats;
++---------+-------------+----------+-----------+
+| seat_id | seat_number | row_name | seat_type |
++---------+-------------+----------+-----------+
+|       1 | A1          | A        | Regular   |
+|       2 | A2          | A        | Regular   |
+|       3 | B1          | B        | Premium   |
+|       4 | B2          | B        | Premium   |
+|       5 | C1          | C        | VIP       |
+|       6 | C2          | C        | VIP       |
++---------+-------------+----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Bookings;
++------------+--------------+--------------+-----------+-------------+---------+---------+
+| booking_id | booking_date | total_amount | status    | customer_id | show_id | seat_id |
++------------+--------------+--------------+-----------+-------------+---------+---------+
+|          1 | 2026-06-21   |       250.00 | Confirmed |           1 |       1 |       1 |
+|          2 | 2026-06-21   |       300.00 | Confirmed |           2 |       2 |       3 |
+|          3 | 2026-06-22   |       350.00 | Pending   |           3 |       3 |       4 |
+|          4 | 2026-06-22   |       200.00 | Confirmed |           4 |       4 |       2 |
+|          5 | 2026-06-23   |       400.00 | Cancelled |           5 |       5 |       5 |
+|          6 | 2026-06-23   |       275.00 | Confirmed |           6 |       6 |       6 |
++------------+--------------+--------------+-----------+-------------+---------+---------+
+6 rows in set (0.00 sec)
+
+mysql> -- EASY QUERIES
+mysql> 
+mysql> -- 1. Displays the records of bookings where the booking amount is greater than ?250 using the WHERE clause with a comparison operator. 
+mysql> SELECT *  FROM  Bookings 
+    -> WHERE total_amount > 250;
++------------+--------------+--------------+-----------+-------------+---------+---------+
+| booking_id | booking_date | total_amount | status    | customer_id | show_id | seat_id |
++------------+--------------+--------------+-----------+-------------+---------+---------+
+|          2 | 2026-06-21   |       300.00 | Confirmed |           2 |       2 |       3 |
+|          3 | 2026-06-22   |       350.00 | Pending   |           3 |       3 |       4 |
+|          5 | 2026-06-23   |       400.00 | Cancelled |           5 |       5 |       5 |
+|          6 | 2026-06-23   |       275.00 | Confirmed |           6 |       6 |       6 |
++------------+--------------+--------------+-----------+-------------+---------+---------+
+4 rows in set (0.00 sec)
+
+mysql> -- 2. Display the names and email addresses of customers whose email contains 'gmail.com' using the WHERE clause for filtering records. 
+mysql> SELECT customer_name, email
+    -> FROM Customers
+    -> WHERE email LIKE '%gmail.com';
++--------------------+-----------------------------+
+| customer_name      | email                       |
++--------------------+-----------------------------+
+| Ganesh Ye Lenin    | mrleninganesh@gmail.com     |
+| Anish Shankar      | anishshankar@gmail.com      |
+| Koushik Varma      | koushikvarma@gmail.com      |
+| Vinodh Kumar       | vinodhkumar@gmail.com       |
+| Bhanu prakash      | bhanuprakash@gmail.com      |
+| Yashwanth Mirapala | yashwanthmirapala@gmail.com |
++--------------------+-----------------------------+
+6 rows in set (0.04 sec)
+
+mysql> -- 3. Return the booking IDs and statuses of bookings that are currently confirmed using the WHERE clause.
+mysql> SELECT booking_id, status FROM Bookings WHERE status = 'Confirmed';
++------------+-----------+
+| booking_id | status    |
++------------+-----------+
+|          1 | Confirmed |
+|          2 | Confirmed |
+|          4 | Confirmed |
+|          6 | Confirmed |
++------------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> -- 4. displays shows whose ticket price is between ?250 and ?350 using the BETWEEN operator in the WHERE clause. 
+mysql> SELECT show_id, show_date, price  FROM Shows 
+    -> WHERE price BETWEEN 250 AND 350;
++---------+------------+--------+
+| show_id | show_date  | price  |
++---------+------------+--------+
+|       1 | 2026-06-25 | 250.00 |
+|       2 | 2026-06-25 | 300.00 |
+|       3 | 2026-06-26 | 350.00 |
+|       6 | 2026-06-28 | 275.00 |
++---------+------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> -- INTERMEDIATE QUERIES
+mysql> 
+mysql> -- 1. Counts the total number of bookings based on their status using the COUNT aggregate function along with the GROUP BY clause
+mysql> SELECT status, COUNT(*) AS Total_Bookings FROM Bookings GROUP BY status;
++-----------+----------------+
+| status    | Total_Bookings |
++-----------+----------------+
+| Confirmed |              4 |
+| Pending   |              1 |
+| Cancelled |              1 |
++-----------+----------------+
+3 rows in set (0.04 sec)
+
+mysql> --  2. Counts the total number of bookings based on their status using the COUNT aggregate function along with the GROUP BY clause.  
+mysql> SELECT status, COUNT(*) AS Total_Bookings  FROM Bookings 
+    -> GROUP BY status;
++-----------+----------------+
+| status    | Total_Bookings |
++-----------+----------------+
+| Confirmed |              4 |
+| Pending   |              1 |
+| Cancelled |              1 |
++-----------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> -- Find the highest booking amount among all bookings using the MAX aggregate function. 
+mysql> SELECT MAX(total_amount) AS Highest_Booking_Amount  FROM Bookings;
++------------------------+
+| Highest_Booking_Amount |
++------------------------+
+|                 400.00 |
++------------------------+
+1 row in set (0.03 sec)
+
+mysql> -- 4. Display the total number of seats available in each seat category using COUNT and GROUP BY clauses. 
+mysql> SELECT seat_type, COUNT(*) AS Total_Seats  FROM Seats 
+    -> GROUP BY seat_type;
++-----------+-------------+
+| seat_type | Total_Seats |
++-----------+-------------+
+| Regular   |           2 |
+| Premium   |           2 |
+| VIP       |           2 |
++-----------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> -- HARD QUERIES
+mysql>
+mysql> -- 1. Join the Customers and Bookings tables to display customer names along with their booking amounts and statuses using the JOIN clause.
+mysql> 
+mysql> SELECT c.customer_name,
+    ->        b.total_amount,
+    ->        b.status
+    -> FROM Customers c
+    -> JOIN Bookings b
+    -> ON c.customer_id = b.customer_id;
++--------------------+--------------+-----------+
+| customer_name      | total_amount | status    |
++--------------------+--------------+-----------+
+| Ganesh Ye Lenin    |       250.00 | Confirmed |
+| Anish Shankar      |       300.00 | Confirmed |
+| Koushik Varma      |       350.00 | Pending   |
+| Vinodh Kumar       |       200.00 | Confirmed |
+| Bhanu prakash      |       400.00 | Cancelled |
+| Yashwanth Mirapala |       275.00 | Confirmed |
++--------------------+--------------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> -- 2. Join the Shows and Bookings tables to display show dates along with the booking amounts for each show using the JOIN clause.
+mysql> 
+mysql> SELECT s.show_date,
+    ->        s.show_time,
+    ->        b.total_amount
+    -> FROM Shows s
+    -> JOIN Bookings b
+    -> ON s.show_id = b.show_id;
++------------+-----------+--------------+
+| show_date  | show_time | total_amount |
++------------+-----------+--------------+
+| 2026-06-25 | 18:00:00  |       250.00 |
+| 2026-06-25 | 21:00:00  |       300.00 |
+| 2026-06-26 | 19:30:00  |       350.00 |
+| 2026-06-27 | 17:00:00  |       200.00 |
+| 2026-06-27 | 20:00:00  |       400.00 |
+| 2026-06-28 | 18:30:00  |       275.00 |
++------------+-----------+--------------+
+6 rows in set (0.00 sec)
+
+mysql> -- 3. Join the Customers and Bookings tables and displays customers whose booking amount is greater than ?300 using JOIN and WHERE clauses.
+mysql> 
+mysql> SELECT c.customer_name,
+    ->        b.total_amount
+    -> FROM Customers c
+    -> JOIN Bookings b
+    -> ON c.customer_id = b.customer_id
+    -> WHERE b.total_amount > 300;
++---------------+--------------+
+| customer_name | total_amount |
++---------------+--------------+
+| Koushik Varma |       350.00 |
+| Bhanu prakash |       400.00 |
++---------------+--------------+
+2 rows in set (0.00 sec)
+
+mysql> -- 4. Joins the Customers and Bookings tables and counts the total number of bookings made by each customer using JOIN, COUNT, and GROUP BY clauses.
+mysql> 
+mysql> SELECT c.customer_name,
+    -> COUNT(b.booking_id) AS Total_Bookings
+    -> FROM Customers c
+    -> JOIN Bookings b
+    -> ON c.customer_id = b.customer_id
+    -> GROUP BY c.customer_name;
++--------------------+----------------+
+| customer_name      | Total_Bookings |
++--------------------+----------------+
+| Ganesh Ye Lenin    |              1 |
+| Anish Shankar      |              1 |
+| Koushik Varma      |              1 |
+| Vinodh Kumar       |              1 |
+| Bhanu prakash      |              1 |
+| Yashwanth Mirapala |              1 |
++--------------------+----------------+
+6 rows in set (0.00 sec)
+
+mysql> -- :::::::::::::::::::::::::::::::::::::::::::::DESCRIPTION OF QUERIES::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+mysql> 
+mysql> -- EASY QUERY 1:
+mysql> -- This query displays the names of customers and their booking amounts where the booking amount is greater than ₹250 using the WHERE clause with a comparison operator.
+mysql> 
+mysql> -- EASY QUERY 2:
+mysql> -- This query displays the names and email addresses of customers whose email contains 'gmail.com' using the WHERE clause for filtering records.
+mysql> 
+mysql> -- EASY QUERY 3:
+mysql> -- This query returns the booking IDs and statuses of bookings that are currently confirmed using the WHERE clause.
+mysql> 
+mysql> -- EASY QUERY 4:
+mysql> -- This query displays shows whose ticket prices are between ₹250 and ₹350 using the BETWEEN operator in the WHERE clause.
+mysql> 
+mysql> -- INTERMEDIATE QUERY 1:
+mysql> -- This query calculates the average ticket price of all shows using the AVG aggregate function.
+mysql> 
+mysql> -- INTERMEDIATE QUERY 2:
+mysql> -- This query counts the total number of bookings based on their status using the COUNT aggregate function along with the GROUP BY clause.
+mysql> 
+mysql> -- INTERMEDIATE QUERY 3:
+mysql> -- This query finds the highest booking amount among all bookings using the MAX aggregate function.
+mysql> 
+mysql> -- INTERMEDIATE QUERY 4:
+mysql> -- This query displays the total number of seats available in each seat category using COUNT and GROUP BY clauses.
+mysql> 
+mysql> -- HARD QUERY 1:
+mysql> -- This query joins the Customers and Bookings tables to display customer names along with their booking amounts and booking statuses using the JOIN clause.
+mysql> 
+mysql> -- HARD QUERY 2:
+mysql> -- This query joins the Shows and Bookings tables to display show dates, show timings, and booking amounts for each booked show using the JOIN clause.
+mysql> 
+mysql> -- HARD QUERY 3:
+mysql> -- This query joins the Customers and Bookings tables and displays customers whose booking amount is greater than ₹300 using JOIN and WHERE clauses.
+mysql> 
+mysql> -- HARD QUERY 4:
+mysql> -- This query joins the Customers and Bookings tables and counts the total number of bookings made by each customer using JOIN, COUNT, and GROUP BY clauses.
+mysql> 
+mysql> 
+mysql> EXIT
